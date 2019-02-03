@@ -6,11 +6,11 @@
   "content_scripts": [
     {
       "matches": ["*://*.hulu.com/*"],
-      "js": ["helper.js"]
+      "js": ["node_modules/webextension-polyfill/dist/webextension-polyfill.min.js", "helper.js"]
     }
   ],
   "background": {
-    "scripts": ["connector.js"]
+    "scripts": ["node_modules/webextension-polyfill/dist/webextension-polyfill.min.js", "connector.js"]
   },
   "options_ui": {
     "page": "options/index.html",
