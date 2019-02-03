@@ -61,7 +61,7 @@ class Video {
   }
 
   getState() {
-    return String.includes(this.controller.className, "paused") ? "paused" : "playing"
+    return String.prototype.includes(this.controller.className, "paused") ? "paused" : "playing"
   }
 
   setTime(t) {
