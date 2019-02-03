@@ -24,6 +24,7 @@ create all the connections to make things work.
 */
 var player, networkLatency;
 var clientId = getRandomInt(1000)
+var browser = browser || chrome
 var myPort = browser.runtime.connect({name:"port-from-cs"})
 myPort.postMessage({type: "play", data: "I will be video metadata"})
 

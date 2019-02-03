@@ -5,6 +5,7 @@ logic on the content will need to be wrapped such that I can re-send a message
 with new variables and have them updated for consumption.
 */
 var portFromCS, socket;
+var browser = browser || chrome;
 
 function connected(p) {
   portFromCS = p;
