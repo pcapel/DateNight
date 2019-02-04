@@ -102,7 +102,7 @@ myPort.onMessage.addListener(({action, timeStamp, originClientId}) => {
       console.log('sync up')
       player = new Video('hulu');
       player.controller.addEventListener('click', (e) => {
-        if (e.target === player.controller) {
+        if (e.target !== player.controller) {
           myPort.postMessage({
             action: player.is_playing ? "pause" : "play",
             timeStamp: player._video.currentTime,
