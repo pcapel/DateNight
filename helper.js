@@ -61,12 +61,9 @@ class Video {
   constructor(site) {
     this.controller = Controller[site]();
     this._video = document.querySelector('video.video-player.content-video-player')
-    this.is_playing = true;
-  }
-
-  getState() {
-    // this is probably dragging ass and making the whole thing screw up.
-    return String.prototype.includes(this.controller.className, "paused") ? "paused" : "playing"
+    // video sync is based on the idea that both parties have paused their players
+    // so the initial state is assumed to be false
+    this.is_playing = false;
   }
 
   setTime(t) {
@@ -76,18 +73,14 @@ class Video {
   }
 
   pause() {
-    console.log('pause method called')
-    console.log("guard is ", this.getState() === "playing")
-    if (this.getState() === "playing") {
+    if (this.is_playing) {
       this.controller.click()
       this.is_playing = false
     }
   }
 
   play() {
-    console.log('play method called')
-    console.log("guard is ", this.getState() === "paused")
-    if (this.getState() === "paused") {
+    if (!this.is_playing) {
       this.controller.click()
       this.is_playing = true
     }
