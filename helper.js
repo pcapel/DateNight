@@ -129,6 +129,9 @@ myPort.onMessage.addListener(({action, timeStamp, originClientId}) => {
       break;
     case 'play':
       if (originClientId !== clientId) {
+        // sync playback time prior to starting up again, just to avoid too much
+        // latency
+        player._video.currentTime = timeStamp
         player.play()
       }
       break;
