@@ -65,6 +65,7 @@ class Video {
   }
 
   getState() {
+    // this is probably dragging ass and making the whole thing screw up.
     return String.prototype.includes(this.controller.className, "paused") ? "paused" : "playing"
   }
 
@@ -75,6 +76,8 @@ class Video {
   }
 
   pause() {
+    console.log('pause method called')
+    console.log("guard is ", this.getState() === "playing")
     if (this.getState() === "playing") {
       this.controller.click()
       this.is_playing = false
@@ -82,6 +85,8 @@ class Video {
   }
 
   play() {
+    console.log('play method called')
+    console.log("guard is ", this.getState() === "paused")
     if (this.getState() === "paused") {
       this.controller.click()
       this.is_playing = true
