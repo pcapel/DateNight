@@ -30,7 +30,7 @@ browser.browserAction.onClicked.addListener(() => {
 
 const setSocket = (obj) => {
   let host = obj.hostUrl
-  if (!!host) {
+  if (!host) {
     throw console.error("The host is not defined, either it's not set, or it's not getting pulled correctly.")
   }
   if (!socket) {

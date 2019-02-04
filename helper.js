@@ -28,6 +28,10 @@ var browser = browser || chrome
 var myPort = browser.runtime.connect({name:"port-from-cs"})
 myPort.postMessage({type: "play", data: "I will be video metadata"})
 
+const triggerClick = (node, ) => {
+
+}
+
 const Controller = {
   hulu: () => {
     return document.querySelectorAll("div.controls__playback-button")[0]
@@ -97,14 +101,19 @@ myPort.onMessage.addListener(({action, timeStamp, originClientId}) => {
     case 'sync':
       console.log('sync up')
       player = new Video('hulu');
-      player.controller.addEventListener('click', () => {
-        myPort.postMessage({
-          action: player.is_playing ? "pause" : "play",
-          timeStamp: player._video.currentTime,
-          originClientId: clientId
-        })
-        player.is_playing = !player.is_playing
+      player.controller.addEventListener('click', (e) => {
+        if (e.target === player.controller) {
+          myPort.postMessage({
+            action: player.is_playing ? "pause" : "play",
+            timeStamp: player._video.currentTime,
+            originClientId: clientId
+          })
+          player.is_playing = !player.is_playing
+        }
       })
+      // ensure time is synced to 0
+      // eventually it'd be cool to have a "save place" function where the users
+      // can mark a timestamp to save and the video URL with it.
       player.setTime(0)
       /*
       this is where I should have a promise that resolves to play
