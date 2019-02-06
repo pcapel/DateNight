@@ -32,7 +32,19 @@ const triggerClick = (node, ) => {
 
 }
 
+function getController() {
+  /* Return the controller node based on the contents of the current storage for
+  the page that the user is on.
+  Throws for no service controller stored.
+  Throws if the node doesn't exist on the page.
+  */
+
+}
+
 const Controller = {
+  /*
+  deprecate
+  */
   hulu: () => {
     return document.querySelectorAll("div.controls__playback-button")[0]
   }
@@ -40,6 +52,12 @@ const Controller = {
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
+}
+
+function serverEventClick(type) {
+  let e = new Event(type)
+  e.isServerPropogatedEvent = true
+  return e
 }
 
 class Video {
@@ -60,6 +78,8 @@ class Video {
 
   constructor(site) {
     this.controller = Controller[site]();
+    // TODO: find a cleaner way to handle this...
+    // Honestly, it may be enough just to do a querySelectorAll for the video node...
     this._video = document.querySelector('video.video-player.content-video-player')
     // video sync is based on the idea that both parties have paused their players
     // so the initial state is assumed to be false
@@ -74,14 +94,14 @@ class Video {
 
   pause() {
     if (this.is_playing) {
-      this.controller.click()
+      this.controller.dispatchEvent(serverEvent('click'))
       this.is_playing = false
     }
   }
 
   play() {
     if (!this.is_playing) {
-      this.controller.click()
+      this.controller.dispatchEvent(serverEvent('click'))
       this.is_playing = true
     }
   }
@@ -100,7 +120,7 @@ myPort.onMessage.addListener(({action, timeStamp, originClientId}) => {
       console.log('sync up')
       player = new Video('hulu');
       player.controller.addEventListener('click', (e) => {
-        if (e.target !== player.controller) {
+        if (!!e.serverPropogatedClick) {
           myPort.postMessage({
             action: player.is_playing ? "pause" : "play",
             timeStamp: player._video.currentTime,
@@ -131,7 +151,7 @@ myPort.onMessage.addListener(({action, timeStamp, originClientId}) => {
       if (originClientId !== clientId) {
         // sync playback time prior to starting up again, just to avoid too much
         // latency
-        player._video.currentTime = timeStamp
+        player._video.currentTime = timeStamp //  + networkLatency???
         player.play()
       }
       break;
