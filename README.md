@@ -1,45 +1,44 @@
 # Date Night!
-I'm in a long distance relationship.  It sucks, but making it easier to watch
-things together makes it suck a little less!
+I was in a long distance relationship for nearly 2 years  One of the things that
+helped to make it feel like it wasn't so bad was watching television/movies
+together while we were on a video call. The only problem with that was that we
+had a devil of a time keeping the videos in sync!
 
 This was inspired by the inevitable countdown to starting a movie, or episode of
-Bob's Burgers between me and my SO via skype.  After doing some side projects
+Bob's Burgers between me and my SO via skype. After doing some side projects
 with WebSockets, I realized that the amount of data that actually needed to be
-traded between hosts to sync the video state was trivial.  Especially if the
-bar was set by what could be communicated via skype.
+traded between hosts to sync the video state was trivial.
 
-## How it works:
-Right now?  Not very well.
+## How does it work?
+At the moment, it doesn't really work all that well. I'll be the first to admit
+that I don't know all that much about the domain. However, I have some ideas
+that I think will really set this up to succeed.
 
-I basically inspected the Hulu player for the controls and setup a system to
-pass the state of the player to a WebSocket server via the background script of
-a web extension.  That data is then propogated to all the connected clients.
-Right now, the only guard against bouncing the heck out of the video state is the
-fact that there's a node overlaying the control that I found.  Pure luck that...
+Initially, I basically inspected the Hulu player for the controls and setup a
+system to pass the state of the player to a WebSocket server via the background
+script of a web extension. That data is then propogated to all the connected clients.
+I did run into an issue where the sync of the player state wasn't really being kept
+anywhere, so they just bounced messages back and forth pausing an playing in a loop.
 
-Anyway.  For testing I use ngrok to portal directly to my localhost and I run the
-server there.  But in a more "production" env I would finalize the server spec
-and then have it up on AWS or similar.  Ideally there'd be some cloud jiggery
-pokery that would let the whole instance be spun up via the extension.  Like an
-"Activate Host" button... yeah.  That'd be dang sweet.  In fact, that's going on
-the to do list.
+I think I need to model the system better. So what I'm planning to do is create a
+TLA+ spec of the system. It's a really simple system, so this is basically an
+excuse for me to write some TLA+. On the other hand, it will be good to validate
+the design before I go about building it.
 
-# To Do:
-0. It looks like the WebSocket times out after a certain period of time.  That's
-not ideal.  I need to look into that and make sure that if it does, then it will
-re-connect, or somehow check itself back in.
+The actual web extension is obviously javascript, and I had initially written the
+server with express. Because I want to have lightning fast websockets though, I'm
+thinking that I want to move the back end to elixir. Again, this is really just an
+excuse for me to use technologies that I'm interested in, so deal with that.
 
-1. The serviceName isn't required, you can just inspect it from the window
-location when the content script is loaded.
+The front end as well will be written out with typescript using a more functional
+approach. Practice makes perfect and I've been interested in getting better at
+functional programming for a while.
 
-2. Figure out if it's possible to have a deployed cloud server that is activated
-and deactivated at a specific IP or host name via the background script.  Prolly
-depends on the HTTP API for the provider, but most of them are probably gonna
-have a way...
+As far as testing goes, setting up ngrok to run a portal to the server instance
+is probably the easiest. Especially if you have a second computer handy to let
+you run the program across the wire for real. Barring that though, I'm not actually
+sure... I should definitely have some unit tests, but integration testing/end to end
+testing is going to require a bit more thought. It could probably be done using
+some fancy container jiggery pokery.
 
-3. Get the correct controller data for Amazon Prime Video and Netflix.
 
-4. Look into creating a context menu that lets the user define the controller.  
-They're probably going to need to select something with an ID on it.  If that isn't
-the case, I could use a selection menu populated with the parent and siblings of
-the node that they did select....  may be harder than I thought...
